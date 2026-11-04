@@ -1,0 +1,5 @@
+# Python 3.10+
+rembg[cpu]==2.0.67      # use rembg[gpu] on a CUDA box
+Pillow>=10.0
+numpy>=1.24
+qrcode>=7.4            # optional: QR billboard for the support/donation link

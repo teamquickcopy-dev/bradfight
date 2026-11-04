@@ -1,0 +1,23 @@
+{
+  "checkpoint": "sd_xl_base_1.0.safetensors",
+  "lora": {"name": "", "strength": 0.9},
+
+  "prompt": "kid_k, full body fighting game character, street clothes, red hoodie, sneakers, side view, facing right, {label}, plain white background, flat lighting",
+  "negative": "background scenery, shadow, floor, cropped, out of frame, extra limbs, extra fingers, blurry, text, watermark",
+  "group_prompts": {
+    "5000": "recoiling from a hit, pained expression",
+    "181": "victory pose, confident"
+  },
+
+  "openpose": {"name": "controlnet-openpose-sdxl.safetensors", "strength": 1.0, "end": 1.0},
+  "depth":    {"name": "controlnet-depth-sdxl.safetensors",    "strength": 0.5, "end": 0.8},
+
+  "mode": "txt2img",
+  "denoise": 0.85,
+
+  "seed": 1234,
+  "steps": 28,
+  "cfg": 6.0,
+  "sampler": "dpmpp_2m",
+  "scheduler": "karras"
+}

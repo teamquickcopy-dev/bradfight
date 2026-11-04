@@ -1,0 +1,290 @@
+{
+  "name": "corner_store",
+  "displayname": "Corner Store",
+  "author": "",
+  "localcoord": [
+    1280,
+    720
+  ],
+  "ground_y": 660,
+  "camera": {
+    "boundleft": -500,
+    "boundright": 500,
+    "boundhigh": -450
+  },
+  "players": {
+    "p1startx": -280,
+    "p2startx": 280,
+    "leftbound": -1000,
+    "rightbound": 1000
+  },
+  "music": "",
+  "sponsors": {
+    "main": {
+      "size": [
+        500,
+        220
+      ],
+      "seconds": 8,
+      "images": [
+        "ads/your_brand_here.png",
+        "ads/sponsor_b.png"
+      ]
+    },
+    "side": {
+      "size": [
+        500,
+        220
+      ],
+      "seconds": 10,
+      "images": [
+        "ads/support.png"
+      ],
+      "qr": {
+        "url": "",
+        "caption": "KEEP THE RENT PAID - scan to support"
+      }
+    }
+  },
+  "elements": [
+    {
+      "id": "sky",
+      "image": "art/sky.png",
+      "anchor": "top",
+      "at": [
+        0,
+        -720
+      ],
+      "delta": [
+        0.05,
+        0.05
+      ],
+      "tile": [
+        1,
+        0
+      ]
+    },
+    {
+      "id": "skyline_far",
+      "image": "art/skyline_far.png",
+      "at": [
+        0,
+        -150
+      ],
+      "delta": [
+        0.2,
+        0.15
+      ],
+      "tile": [
+        1,
+        0
+      ]
+    },
+    {
+      "id": "skyline_near",
+      "image": "art/skyline_near.png",
+      "at": [
+        0,
+        -110
+      ],
+      "delta": [
+        0.35,
+        0.3
+      ],
+      "tile": [
+        1,
+        0
+      ]
+    },
+    {
+      "id": "billboard_main_frame",
+      "image": "art/billboard_frame.png",
+      "at": [
+        -330,
+        -280
+      ],
+      "delta": [
+        0.35,
+        0.3
+      ]
+    },
+    {
+      "id": "billboard_main_ad",
+      "sponsor": "main",
+      "anchor": "center",
+      "at": [
+        -330,
+        -480
+      ],
+      "delta": [
+        0.35,
+        0.3
+      ]
+    },
+    {
+      "id": "billboard_main_glow",
+      "image": "art/billboard_glow.png",
+      "at": [
+        -330,
+        -280
+      ],
+      "delta": [
+        0.35,
+        0.3
+      ],
+      "trans": "add"
+    },
+    {
+      "id": "billboard_side_frame",
+      "image": "art/billboard_frame.png",
+      "at": [
+        350,
+        -250
+      ],
+      "delta": [
+        0.35,
+        0.3
+      ]
+    },
+    {
+      "id": "billboard_side_ad",
+      "sponsor": "side",
+      "anchor": "center",
+      "at": [
+        350,
+        -450
+      ],
+      "delta": [
+        0.35,
+        0.3
+      ]
+    },
+    {
+      "id": "billboard_side_glow",
+      "image": "art/billboard_glow.png",
+      "at": [
+        350,
+        -250
+      ],
+      "delta": [
+        0.35,
+        0.3
+      ],
+      "trans": "add"
+    },
+    {
+      "id": "storefront",
+      "image": "art/storefront.png",
+      "at": [
+        0,
+        -60
+      ],
+      "delta": [
+        0.7,
+        0.7
+      ]
+    },
+    {
+      "id": "neon_open",
+      "anchor": "center",
+      "at": [
+        -557,
+        -205
+      ],
+      "delta": [
+        0.7,
+        0.7
+      ],
+      "trans": "add",
+      "frames": [
+        {
+          "image": "art/neon_open_on.png",
+          "ticks": 150
+        },
+        {
+          "image": "art/neon_open_off.png",
+          "ticks": 5
+        },
+        {
+          "image": "art/neon_open_on.png",
+          "ticks": 8
+        },
+        {
+          "image": "art/neon_open_off.png",
+          "ticks": 4
+        }
+      ]
+    },
+    {
+      "id": "crowd",
+      "at": [
+        0,
+        -40
+      ],
+      "delta": [
+        0.8,
+        0.8
+      ],
+      "frames": [
+        {
+          "image": "art/crowd_0.png",
+          "ticks": 18
+        },
+        {
+          "image": "art/crowd_1.png",
+          "ticks": 18
+        }
+      ]
+    },
+    {
+      "id": "traffic",
+      "image": "art/car.png",
+      "at": [
+        900,
+        -45
+      ],
+      "delta": [
+        0.85,
+        0.85
+      ],
+      "velocity": [
+        -9,
+        0
+      ],
+      "tile": [
+        1,
+        0
+      ],
+      "tilespacing": [
+        3200,
+        0
+      ]
+    },
+    {
+      "id": "street",
+      "image": "art/street.png",
+      "anchor": "top",
+      "at": [
+        0,
+        -50
+      ],
+      "delta": [
+        1,
+        1
+      ]
+    },
+    {
+      "id": "lamp_post",
+      "image": "art/lamp_post.png",
+      "at": [
+        -1080,
+        60
+      ],
+      "delta": [
+        1.25,
+        1.1
+      ],
+      "layer": 1
+    }
+  ]
+}

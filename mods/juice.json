@@ -1,0 +1,13 @@
+{
+  "_comment": "Hit feel per strength tier. pausetime = frames both fighters freeze on hit (never lowered below the template's). Shake amplitudes are for a 1280-wide character and scale with its localcoord.",
+  "tiers": {
+    "light":   {"hitstop": 10, "shake": null},
+    "medium":  {"hitstop": 13, "shake": {"time": 6,  "ampl": 8,  "freq": 170}},
+    "heavy":   {"hitstop": 16, "shake": {"time": 12, "ampl": 18, "freq": 170}},
+    "special": {"hitstop": 16, "shake": {"time": 12, "ampl": 18, "freq": 170}},
+    "super":   {"hitstop": 22, "shake": {"time": 22, "ampl": 30, "freq": 175}}
+  },
+  "knockdown_shake": {"time": 10, "ampl": 16, "freq": 165},
+  "special_states": [1000, 2999],
+  "super_states": [3000, 4999]
+}

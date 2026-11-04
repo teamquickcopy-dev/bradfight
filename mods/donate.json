@@ -1,0 +1,11 @@
+{
+  "url": "",
+  "label": "KEEP THE RENT PAID",
+  "title": "KEEP THE RENT PAID",
+  "message": "This game is made by one person. If you're having fun, a tip keeps the next update coming. Thank you!",
+  "opened_text": "Opened in your browser (Alt+Tab if the game is fullscreen).",
+  "scan_text": "Scan the code with your phone to support.",
+  "close_text": "Press any button to go back.",
+  "before": "options",
+  "open_browser": true
+}
