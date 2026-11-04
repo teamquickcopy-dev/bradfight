@@ -11,6 +11,7 @@ fighter-pipeline/
 │   ├── make_greybox.py           # placeholder renders from the template, to test the build before art exists
 │   ├── draw_openpose.py          # keypoint JSON -> ControlNet OpenPose images
 │   ├── build_donate_mod.py       # mods/donate.json -> engine/external/mods/donate.lua (title-menu button)
+│   ├── build_snd.py              # SOUNDLIST.md + recordings (wav/mp3/ogg/flac/m4a) -> <char>.snd
 │   ├── add_juice.py              # tiered hitstop + screen shake on every HitDef (mods/juice.json)
 │   ├── install_crt.py            # CRT / bloom post-process shaders + save/config.ini
 │   ├── make_stage_art.py         # placeholder night-street art + stage.json
@@ -32,6 +33,7 @@ fighter-pipeline/
 │   ├── 03_aligned/                           # 768x1024 canvases + alignment.json + alignment_report.csv
 │   ├── 04_build/<char>.sffmanifest.txt, <char>.sff
 │   └── portraits/9000_portraits/0000.png     # optional, not ground-aligned (axis 0,0)
+│   └── sounds/<group>_<label>/<n>.wav        # your recordings (see SOUNDLIST.md)
 ├── mods/donate.json              # support link + texts for the "KEEP THE RENT PAID" menu button
 ├── stages/src/<stage>/           # stage.json + art/*.png + ads/*.png (+ preview.png after a build)
 └── engine/                       # Ikemen GO v1.0.0 (Linux build); chars/<char>/ + data/select.def
@@ -229,3 +231,28 @@ Strengths are flags (`--scanlines 0.3 --bloom 0.25 --curvature 0.035 --mask 0.1`
 `[Video] ExternalShaders` in `engine/save/config.ini`. Tested by compiling the shaders the way Ikemen's
 OpenGL 3.3 renderer does and rendering a stage frame: average brightness and saturation stay within 5% of
 the original. The experimental Vulkan renderer needs `.spv` builds (see the tool's help).
+
+## Character sounds
+
+```bash
+python tools/build_snd.py list characters/kid_k     # SOUNDLIST.md + sounds/<group>_<label>/ folders
+```
+
+Record into those folders: `sounds/0_voices/0000.wav`, `0001.mp3` and so on. WAV, MP3, OGG, FLAC, M4A and
+Opus all work. `build_character.sh` then builds `<char>.snd` automatically, or run it by hand:
+```bash
+python tools/build_snd.py build characters/kid_k --char-out engine/chars/kid_k
+```
+
+Each recording is converted to 16-bit 44.1 kHz mono (`--stereo` keeps stereo), with silence trimmed and
+5 ms fades added against clicks. Loudness is evened to -16 dBFS RMS with peaks capped at -1 dBFS (change it
+with `--target-rms`). Any sound you haven't recorded keeps the template's, so the character never goes
+silent; the build lists which ones.
+
+The list only covers the character's own sounds: `PlaySnd` without an `F`/`GO` prefix, and
+`hitsound`/`guardsound` with an `S` prefix. Ordinary hit and block sounds come from the engine's shared
+`fight.snd`. On kfm720 that's 9 sounds played by the moves (attack grunts, throw, landing, knee kick), plus 3
+the template carries for intros and wins.
+
+Tested by loading the built `.snd` with Ikemen's own audio decoder (its fork of `beep`) using Ikemen's
+read loop: every sound streamed to the end, so none would be silently disabled at load.

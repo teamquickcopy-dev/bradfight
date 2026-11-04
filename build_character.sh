@@ -31,6 +31,11 @@ python3 tools/build_char_def.py "$CHAR" --sff "$DIR/04_build/$CHAR.sff" --templa
   --out "engine/chars/$CHAR" --displayname "${DISPLAYNAME:-$CHAR}" --author "${AUTHOR:-}" \
   --force "${SELECT[@]}"
 
+# sounds: recordings in characters/<char>/sounds/ (see SOUNDLIST.md from: tools/build_snd.py list)
+if [[ -d "$DIR/sounds" ]]; then
+  python3 tools/build_snd.py build "$DIR" --template "$TEMPLATE" --char-out "engine/chars/$CHAR" | tail -1
+fi
+
 # hit feel: tiered hitstop + screen shake (tune mods/juice.json, rebuild)
 if [[ -f mods/juice.json ]]; then
   python3 tools/add_juice.py "engine/chars/$CHAR" --profile mods/juice.json | tail -1
