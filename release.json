@@ -1,0 +1,14 @@
+{
+  "name": "BRADFIGHT",
+  "slug": "bradfight",
+  "version": "0.1.0",
+  "characters": ["fighter01"],
+  "stages": ["corner_store"],
+  "platforms": ["windows", "macos", "linux"],
+  "ikemen_version": "v1.0.0",
+  "itch": {"user": "", "game": ""},
+  "credits": [
+    "Engine: Ikemen GO (MIT license, see LICENSES.txt) - https://github.com/ikemen-engine/Ikemen-GO",
+    "Character moveset template: Kung Fu Man by Elecbyte"
+  ]
+}

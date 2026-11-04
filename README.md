@@ -13,6 +13,7 @@ fighter-pipeline/
 │   ├── build_donate_mod.py       # mods/donate.json -> engine/external/mods/donate.lua (title-menu button)
 │   ├── build_snd.py              # SOUNDLIST.md + recordings (wav/mp3/ogg/flac/m4a) -> <char>.snd
 │   ├── build_brand.py            # brand/brand.json -> your screenpack: logo, title/select, splash, lifebar, icon
+│   ├── package_release.py        # release.json -> dist/<Name>-<version>-<platform>.zip for Windows/macOS/Linux
 │   ├── add_juice.py              # tiered hitstop + screen shake on every HitDef (mods/juice.json)
 │   ├── install_crt.py            # CRT / bloom post-process shaders + save/config.ini
 │   ├── make_stage_art.py         # placeholder night-street art + stage.json
@@ -35,6 +36,7 @@ fighter-pipeline/
 │   ├── 04_build/<char>.sffmanifest.txt, <char>.sff
 │   └── portraits/9000_portraits/0000.png     # optional, not ground-aligned (axis 0,0)
 │   └── sounds/<group>_<label>/<n>.wav        # your recordings (see SOUNDLIST.md)
+├── release.json                 # name, version, roster, platforms, itch.io target
 ├── brand/                       # brand.json + logo.png, splash.png, icon.png (placeholders until you replace them)
 ├── mods/donate.json              # support link + texts for the "KEEP THE RENT PAID" menu button
 ├── stages/src/<stage>/           # stage.json + art/*.png + ads/*.png (+ preview.png after a build)
@@ -286,3 +288,34 @@ gets (`title_dim`, `select_dim`) are set in `brand.json`. Each build writes `bra
 
 Sprites are swapped in place in copies of the screenpack's sprite files. Every other sprite and palette
 stays byte-identical to the original, so nothing else in the screenpack can break.
+
+## Release packaging
+
+```bash
+python tools/package_release.py release.json        # --platforms windows,linux to build a subset
+```
+
+`release.json` sets the name, version, the characters and stages to ship, the platforms, and your itch.io
+target. For each platform, the script works like this:
+
+1. Takes the matching Ikemen GO release (downloaded once into `.cache/`) and removes Ikemen's sample
+   characters and stages.
+2. Adds what you've built in `engine/`: characters, stages, the screenpack, the donation mod, the CRT
+   shader and `save/config.ini`.
+3. Writes a `select.def` containing only your roster, and renames the launchers to your game:
+   `BRADFIGHT.exe`, `BRADFIGHT.app` with your icon, and `BRADFIGHT.sh`/`.desktop` on Linux.
+4. Adds `README.txt` (how to start the game, controls, a first-launch note for unsigned builds) and
+   `CREDITS.txt`.
+
+Before zipping, it checks that everything the game will load is inside the package: each character's files,
+the stages, the screenpack, icons, shaders and mods. It also refuses a package that still lists removed
+sample content. Output: `dist/<Name>-<version>-<platform>.zip`, a `.sha256` for each, and the `butler push`
+commands for itch.io.
+
+It packs what's already built; it doesn't rebuild. Run your character, stage, brand and mod builds first.
+Three things to know:
+- The builds are unsigned. Windows SmartScreen and macOS Gatekeeper show a warning on first launch, and the
+  player README explains it.
+- The `.exe`'s own file icon stays Ikemen's. The window icon is yours. On Windows, `rcedit` can change the
+  file icon.
+- Ikemen v1.0.0's macOS build supports Apple Silicon only.

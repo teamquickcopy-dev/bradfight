@@ -29,3 +29,7 @@ __pycache__/
 
 # Generated brand preview
 /brand/preview.png
+
+# Release builds and the Ikemen download cache
+/dist/
+/.cache/
