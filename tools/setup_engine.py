@@ -7,7 +7,8 @@ setup_engine.py - fetch the parts that aren't in the repo and rebuild what is ge
 
 1. Downloads Ikemen GO (default v1.0.0) for windows / macos / linux into engine/.
 2. Copies Ikemen's bundled kfm720 character into templates/fighter_base/ (the balanced template).
-3. Builds the corner_store stage, installs the CRT shader, and builds the donation mod if
+3. Builds the corner_store stage, installs the CRT shader, builds your branding (brand/brand.json),
+   and builds the donation mod if
    mods/donate.json has a url.
 
 The engine and the Kung Fu Man template are third-party (Ikemen GO: MIT; KFM: Elecbyte), so the repo
@@ -103,6 +104,8 @@ def main() -> int:
         extra = ["--select", str(select)] if select.exists() else []
         run("tools/build_stage.py", str(stage_cfg), *extra)
     run("tools/install_crt.py", "crt")
+    if (ROOT / "brand" / "brand.json").exists():
+        run("tools/build_brand.py", "brand/brand.json")
     donate = ROOT / "mods" / "donate.json"
     if donate.exists() and json.loads(donate.read_text()).get("url"):
         run("tools/build_donate_mod.py", str(donate))

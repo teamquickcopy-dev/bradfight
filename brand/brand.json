@@ -1,0 +1,17 @@
+{
+  "name": "BRADFIGHT",
+  "slug": "bradfight",
+  "tagline": "",
+  "author": "",
+  "colors": {"primary": [255, 60, 140], "secondary": [40, 220, 255]},
+  "logo": "brand/logo.png",
+  "splash": "brand/splash.png",
+  "icon": "brand/icon.png",
+  "background": {
+    "sky": "stages/src/corner_store/art/sky.png",
+    "far": "stages/src/corner_store/art/skyline_far.png",
+    "near": "stages/src/corner_store/art/skyline_near.png"
+  },
+  "powered_by_ikemen": true,
+  "tint_lifebar_frame": true
+}

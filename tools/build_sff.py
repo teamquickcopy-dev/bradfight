@@ -161,6 +161,56 @@ def build(entries: list[Entry], out: Path, trim: bool, dedupe: bool, compress: i
     return {"sprites": n_spr, "linked": linked, "bytes": out.stat().st_size}
 
 
+def replace_sprites(src: Path, out: Path, images: dict) -> dict:
+    """Copy an existing SFF v2 with some sprites replaced or added.
+
+    images: {(group, number): (PIL RGBA image, axis_x, axis_y)}. Every other sprite and palette is
+    copied byte for byte (whatever its format), so screenpack files built by other tools stay intact.
+    """
+    b = src.read_bytes()
+    if b[:12] != b"ElecbyteSpr\x00" or b[15] != 2:
+        raise SystemExit(f"{src}: need an SFF v2 file")
+    spr_ofs, n_spr, pal_ofs, n_pal, lofs, llen, tofs, tlen = struct.unpack_from("<8I", b, 36)
+    nodes = [list(SPRITE_NODE.unpack_from(b, spr_ofs + i * SPRITE_NODE.size)) for i in range(n_spr)]
+    pals = b[pal_ofs:pal_ofs + n_pal * PALETTE_NODE.size]
+    ldata = bytearray(b[lofs:lofs + llen])
+    tdata = b[tofs:tofs + tlen]
+    index = {(nd[0], nd[1]): i for i, nd in enumerate(nodes)}
+    replaced = added = 0
+    for (g, n), (img, ax, ay) in sorted(images.items()):
+        img = img.convert("RGBA")
+        raw = img.tobytes()
+        buf = io.BytesIO()
+        img.save(buf, format="PNG", compress_level=9)
+        data = struct.pack("<I", len(raw)) + buf.getvalue()
+        node = [g, n, img.width, img.height, ax, ay, 0, FMT_PNG32, 32, len(ldata), len(data), 0, 0]
+        ldata += data
+        if (g, n) in index:
+            nodes[index[(g, n)]] = node
+            replaced += 1
+        else:
+            nodes.append(node)
+            added += 1
+    new_spr_ofs = HEADER_SIZE
+    new_pal_ofs = new_spr_ofs + len(nodes) * SPRITE_NODE.size
+    new_lofs = new_pal_ofs + len(pals)
+    new_tofs = new_lofs + len(ldata)
+    header = bytearray(b[:HEADER_SIZE])
+    struct.pack_into("<8I", header, 36, new_spr_ofs, len(nodes), new_pal_ofs, n_pal,
+                     new_lofs, len(ldata), new_tofs, len(tdata))
+    out.parent.mkdir(parents=True, exist_ok=True)
+    tmp = out.with_suffix(out.suffix + ".tmp")
+    with tmp.open("wb") as fh:
+        fh.write(header)
+        for nd in nodes:
+            fh.write(SPRITE_NODE.pack(*nd))
+        fh.write(pals)
+        fh.write(ldata)
+        fh.write(tdata)
+    tmp.replace(out)
+    return {"replaced": replaced, "added": added, "sprites": len(nodes), "bytes": out.stat().st_size}
+
+
 def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("manifest", type=Path)

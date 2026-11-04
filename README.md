@@ -12,6 +12,7 @@ fighter-pipeline/
 │   ├── draw_openpose.py          # keypoint JSON -> ControlNet OpenPose images
 │   ├── build_donate_mod.py       # mods/donate.json -> engine/external/mods/donate.lua (title-menu button)
 │   ├── build_snd.py              # SOUNDLIST.md + recordings (wav/mp3/ogg/flac/m4a) -> <char>.snd
+│   ├── build_brand.py            # brand/brand.json -> your screenpack: logo, title/select, splash, lifebar, icon
 │   ├── add_juice.py              # tiered hitstop + screen shake on every HitDef (mods/juice.json)
 │   ├── install_crt.py            # CRT / bloom post-process shaders + save/config.ini
 │   ├── make_stage_art.py         # placeholder night-street art + stage.json
@@ -34,6 +35,7 @@ fighter-pipeline/
 │   ├── 04_build/<char>.sffmanifest.txt, <char>.sff
 │   └── portraits/9000_portraits/0000.png     # optional, not ground-aligned (axis 0,0)
 │   └── sounds/<group>_<label>/<n>.wav        # your recordings (see SOUNDLIST.md)
+├── brand/                       # brand.json + logo.png, splash.png, icon.png (placeholders until you replace them)
 ├── mods/donate.json              # support link + texts for the "KEEP THE RENT PAID" menu button
 ├── stages/src/<stage>/           # stage.json + art/*.png + ads/*.png (+ preview.png after a build)
 └── engine/                       # Ikemen GO v1.0.0 (Linux build); chars/<char>/ + data/select.def
@@ -256,3 +258,31 @@ the template carries for intros and wins.
 
 Tested by loading the built `.snd` with Ikemen's own audio decoder (its fork of `beep`) using Ikemen's
 read loop: every sound streamed to the end, so none would be silently disabled at load.
+
+## Branding
+
+```bash
+python tools/build_brand.py brand/brand.json        # setup_engine.py runs this too
+```
+
+This builds your own screenpack, `engine/data/<slug>/`, from Ikemen's bundled `ikemen1`, and sets
+`engine/save/config.ini` to use it: `Motif`, and the window title and icon. Every menu keeps working,
+because only images and colours change:
+
+- **Title screen:** your logo with a glow in the primary colour, and a night-city background built from
+  the stage art. The skylines scroll slowly where the clouds were. The highlighted menu item uses the
+  secondary colour.
+- **Select screen:** the same city, tinted with the secondary colour and darker so the character grid
+  reads clearly.
+- **Startup splash:** your splash image instead of the Ikemen video, with a small "Powered by Ikemen GO"
+  credit. Set `"powered_by_ikemen": false` to drop it.
+- **Lifebars:** the frame is tinted with the primary colour. The health colours stay as they are, because
+  they tell players who's winning.
+- **Window:** your game name as the title, and your icon.
+
+`brand/logo.png`, `splash.png` and `icon.png` start as generated placeholders. Replace them with real art
+at any size (it's fitted, never stretched) and rebuild. Colours, background art and how dark each screen
+gets (`title_dim`, `select_dim`) are set in `brand.json`. Each build writes `brand/preview.png`.
+
+Sprites are swapped in place in copies of the screenpack's sprite files. Every other sprite and palette
+stays byte-identical to the original, so nothing else in the screenpack can break.
